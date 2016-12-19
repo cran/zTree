@@ -1,0 +1,12 @@
+f445ddae452758b2771b578668db7f61 *DESCRIPTION
+d32239bcb673463ab874e80d47fae504 *LICENSE
+5809b3aaef6edb98bdd42eeb191fc018 *NAMESPACE
+d0876ab53e866d62e2e077a516ac54c9 *NEWS.md
+01dd6e5ea540327bc82735de9cfb98db *R/toLongDate.R
+3fee2a718b10d9bf1c71a32910c1ad2a *R/zTreeSbj.R
+4fe2e48c1e0556e13cbf10632c7a844c *R/zTreeTables.R
+79427df192a511efeffba8df32d5c690 *build/partial.rdb
+2b74abe4b0f1be34864524fdd50b6f2c *man/toLongDate.Rd
+b7dcea23498a97c3620c115818a8c2e9 *man/zTree-package.Rd
+d47c12aea3d669ae24f26952eb8c42ad *man/zTreeSbj.Rd
+361f44eecdc3a0048e812440a52948a0 *man/zTreeTables.Rd
