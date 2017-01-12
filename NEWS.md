@@ -1,3 +1,7 @@
+# zTree 1.0.4, 2017-01-05:
+## load options correctly
+# zTree 1.0.3, 2016-12-19:
+## CRAN requirements
 # zTree 1.0.2, 2016-12-19:
 ## CRAN requirements
 # zTree 1.0.1, 2016-12-18:

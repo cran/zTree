@@ -5,8 +5,6 @@
 
 zTreeTables <-
     function(filelist,tables=c("globals","subjects"),sep = "\t",zTree.silent=getOption("zTree.silent"),zTree.encoding=getOption("zTree.encoding")) {
-        if(is.null(zTree.silent)) zTree.silent<-FALSE
-        if(is.null(zTree.encoding)) zTree.encoding<-"LATIN1"
   splittable <- function(filename,tables=c("globals","subjects")) {
     getTable <- function(start, stop) {
       if (!is.na(stop) && !is.na(start)) {

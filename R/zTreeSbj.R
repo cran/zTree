@@ -5,8 +5,6 @@
 
 zTreeSbj <-
 function(files,sep="\t",zTree.silent=getOption("zTree.silent"),zTree.encoding=getOption("zTree.encoding")) { 
-    if(is.null(zTree.silent)) zTree.silent<-FALSE
-    if(is.null(zTree.encoding)) zTree.encoding<-"LATIN1"
     ldply (files, function(filename) {
         if(!zTree.silent) cat("reading ",filename,"...\n")
         Tfile<-file(filename,"r",encoding=zTree.encoding)
