@@ -8,20 +8,25 @@ Read '.sbj' files which are written by the Microsoft Windows program
 economic experiments (see <http://www.ztree.uzh.ch/> for more information).}
 \usage{
 zTreeSbj(files, sep = "\\t", zTree.silent=getOption("zTree.silent"),
-	zTree.encoding=getOption("zTree.encoding"))
+	zTree.encoding=getOption("zTree.encoding"),ignore.errors=FALSE)
 }
 \arguments{
   \item{files}{A vector of 'z-Tree' .sbj filenames}
   \item{sep}{'z-Tree' uses "\\t" as a separator. If you have a manipulated file, you
     might need to change the separator.}
   \item{zTree.silent}{If \code{TRUE}, generates less verbose output.}
-  \item{zTree.encoding}{The default encoding is "LATIN1".}
+  \item{zTree.encoding}{The default encoding is the value of
+    \code{getOption("encoding")}. If z-Tree files were written with an
+    encoding different from your system encoding, then
+    \code{"WINDOWS-1252"} might be worth a try.}
+  \item{ignore.errors}{Usually, \code{zTreeSbj} stops with an error when
+    it detects a wrong encoding. With \code{ignore.errors=TRUE} it only generates a warning.}
 }
 \value{
-A matrix with one entry for each subject.
+A data frame with one entry for each subject.
 }
-\references{
-  Urs Fischbacher. "z-Tree Manual 2.1 Experimenter's Manual." Zurich. 2002.
+\references{Urs Fischbacher. "z-Tree: Zurich Toolbox for Ready-made Economic Experiments."
+  Experimental Economics (2) 171-178, 2007.
 }
 \author{Oliver Kirchkamp}
 

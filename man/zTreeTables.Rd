@@ -7,24 +7,30 @@ Read '.xls' files which are written by the Microsoft Windows program
 'z-Tree'. The latter is a software for developing and carrying out
 economic experiments (see <http://www.ztree.uzh.ch/> for more information).}
 \usage{
-zTreeTables(filelist, tables = c("globals", "subjects"), sep = "\\t",
+zTreeTables(files, tables = c("globals", "subjects"), sep = "\\t",
 	zTree.silent=getOption("zTree.silent"),
-	zTree.encoding=getOption("zTree.encoding"))
+	zTree.encoding=getOption("zTree.encoding"),ignore.errors=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{filelist}{a vector of 'z-Tree' (xls-) filenames.}
+  \item{files}{a vector of 'z-Tree' (xls-) filenames.}
   \item{tables}{a vector of table names. If you leave this empty, globals and subjects will be read. If you set tables=NULL, all tables will be read.}
   \item{sep}{Field separator. 'z-Tree' uses "\\t" as a separator. If you have a manipulated file, you
     might need to change the separator.}
   \item{zTree.silent}{If \code{TRUE}, generates less verbose output.}
-  \item{zTree.encoding}{The default encoding is "LATIN1".}
+  \item{zTree.encoding}{The default encoding is the value of
+    \code{getOption("encoding")}. If z-Tree files were written with an
+    encoding different from your system encoding then
+    \code{"WINDOWS-1252"} might be worth a try.}
+  \item{ignore.errors}{Usually, \code{zTreeTables} stops with an error when
+    it detects a wrong encoding or a manipulated file.
+    With \code{ignore.errors=TRUE} it only generates a warning.}
 }
 \value{
   A list of all tables (e.g. "globals", "subjects", etc.)
 }
-\references{
-  Urs Fischbacher. "z-Tree Manual 2.1 Experimenter's Manual." Zurich. 2002.
+\references{Urs Fischbacher. "z-Tree: Zurich Toolbox for Ready-made Economic Experiments."
+  Experimental Economics (2) 171-178, 2007.
 }
 \author{Oliver Kirchkamp}
 \seealso{See also \code{zTreeSbj}}

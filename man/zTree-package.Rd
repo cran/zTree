@@ -19,6 +19,9 @@ Maintainer: \packageMaintainer{zTree}
 }
 \references{Urs Fischbacher. "z-Tree: Zurich Toolbox for Ready-made Economic Experiments."
   Experimental Economics (2) 171-178, 2007.
+
+  Oliver Kirchkamp. "Importing z-Tree data into R."
+  Journal of Behavioral and Experimental Finance (22), 1-2, 2019.
 }
 \keyword{package}
 \examples{

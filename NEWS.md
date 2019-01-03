@@ -1,3 +1,5 @@
+# zTree 1.0.5, 2018-12-30:
+## more compact warnings for manipulated files, if getOption(zTree.encoding) is NULL, then getOption(encoding) is used.
 # zTree 1.0.4, 2017-01-05:
 ## load options correctly
 # zTree 1.0.3, 2016-12-19:
