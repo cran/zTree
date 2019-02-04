@@ -48,7 +48,7 @@ zTreeTables <-
               if (is.null(tab)) {
                   tab<-new
               } else {
-                  tab <- rbind.fill(tab,new)
+                  tab <- plyr::rbind.fill(tab,new)
               }
           }
       }
@@ -122,7 +122,7 @@ Your data seem to use a different encoding.
     a<-splittable(name,tables)
     for(t in union(names(a),names(z))) {
       if (!is.null(a[[t]])) # there is no such table
-        z[[t]]<-rbind.fill(z[[t]],a[[t]])
+        z[[t]]<-plyr::rbind.fill(z[[t]],a[[t]])
     }
   }
         ## wrong encoding:

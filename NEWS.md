@@ -1,3 +1,5 @@
+# zTree 1.0.6, 2019-02-04:
+## plyr no longer imported (to avoid conflict with dplyr)
 # zTree 1.0.5, 2018-12-30:
 ## more compact warnings for manipulated files, if getOption(zTree.encoding) is NULL, then getOption(encoding) is used.
 # zTree 1.0.4, 2017-01-05:

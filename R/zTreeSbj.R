@@ -16,7 +16,7 @@ zTreeSbj <-
     if(is.null(zTree.encoding))
         zTree.encoding <- getOption("encoding")
     wrong.Enc<-NULL
-    sbj<-ldply (files, function(filename) {
+    sbj<-plyr::ldply (files, function(filename) {
         if(!zTree.silent) cat("reading ",filename,"...\n")
         Tfile<-file(filename,"r",encoding=zTree.encoding)
         aa<-withCallingHandlers(readLines(Tfile),warning=w.handler)
