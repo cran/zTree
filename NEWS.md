@@ -1,3 +1,5 @@
+# zTree 1.0.7, 2021-11-03:
+## changes due to z-Tree 5... (different xls format, table names contain linebreaks...)
 # zTree 1.0.6, 2019-02-04:
 ## plyr no longer imported (to avoid conflict with dplyr)
 # zTree 1.0.5, 2018-12-30:

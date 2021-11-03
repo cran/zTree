@@ -18,10 +18,8 @@ zTreeTables(files, tables = c("globals", "subjects"), sep = "\\t",
   \item{sep}{Field separator. 'z-Tree' uses "\\t" as a separator. If you have a manipulated file, you
     might need to change the separator.}
   \item{zTree.silent}{If \code{TRUE}, generates less verbose output.}
-  \item{zTree.encoding}{The default encoding is the value of
-    \code{getOption("encoding")}. If z-Tree files were written with an
-    encoding different from your system encoding then
-    \code{"WINDOWS-1252"} might be worth a try.}
+  \item{zTree.encoding}{zTree writes text files and seems to use latin1
+    (windows-1252) encoding for these files.}
   \item{ignore.errors}{Usually, \code{zTreeTables} stops with an error when
     it detects a wrong encoding or a manipulated file.
     With \code{ignore.errors=TRUE} it only generates a warning.}

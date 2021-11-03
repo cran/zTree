@@ -14,13 +14,15 @@ zTreeTables <-
   splittable <- function(filename,tables=c("globals","subjects")) {
     getTable <- function(start, stop) {
       if (!is.na(stop) && !is.na(start)) {
-        names<-aa2[[start]][-3]
+        names<-f.table[[start]][-3]
         names[1]<-"Date"
         names[2]<-"Treatment"
+        if(stop==start+1) ## empty table
+            return(data.frame(NULL))
         tab<-as.data.frame(matrix(nrow=stop-start-1,ncol=length(names)))
         colnames(tab)<-names
         for( i in 1:(stop-start-1)) {
-          tab[i,] <- aa2[[start+i]][-3]
+          tab[i,] <- f.table[[start+i]][-3]
         }
         for (n in colnames(tab)) {
           if (is.character(tab[[n]])) {
@@ -42,7 +44,6 @@ zTreeTables <-
           fail<-names(new)==""
           if (sum(fail)>0)
               manipulated.files[[filename]] <<- unique(c(unlist(manipulated.files[filename]),name))
-              ## warning(sprintf("*** File %s, table %s contains empty cells. This is not a z-Tree file ***",filename,name))
           new<-new[,!fail]
           if (length(new)>0) {
               if (is.null(tab)) {
@@ -60,25 +61,41 @@ zTreeTables <-
         myWarnings<<-c(myWarnings,list(w))
         invokeRestart("muffleWarning")
     }
-
+    ##
+    advanceTable <- function() {
+        last<<-last+1
+        splitpoints[last]<<-i
+        splitname[last]<<-f.table[[i]][3]
+        splittreat[last]<<-f.table[[i]][2]
+        splitcols[last]<<-length(f.table[[i]])
+    }
+    ##
     if(!zTree.silent) cat("reading ",filename,"...\n")
-    Tfile<-file(filename,"r",encoding=zTree.encoding)
-    aa<-withCallingHandlers(readLines(Tfile),warning=w.handler)
-    ## catch warning for invalid encoding:
-    if(length(myWarnings)>0)
-        if(sum(startsWith(sapply(myWarnings,function(x) x$message),"invalid input"))>0)
-            wrong.Enc<<-c(wrong.Enc,filename)
-    close(Tfile)
-    aa.i<-iconv(aa,sub="byte") ## try to convert to native encoding anyway
-    if(sum(aa.i!=aa)>0) {
+    f.size<-file.info(filename)$size
+    f.content <- readChar(filename,f.size,useBytes=TRUE)
+    Encoding(f.content)<-zTree.encoding
+    fc.content <- iconv(f.content,zTree.encoding,sub="byte")
+    if(fc.content != f.content) {
         wrong.Enc<<-c(wrong.Enc,filename)
         if(!ignore.errors)
             stop("You are currently using encoding \"",zTree.encoding,"\".
 Your data seem to use a different encoding.
 *** Read the manual! Change \"zTree.encoding\"! ***")
     }
-    aa2<-strsplit(aa.i,sep)
-    if(length(aa2[[1]])<3) 
+    ##
+    f.lines <- unlist(strsplit(fc.content,"\\n"))
+    ## figure out table names with linebreaks:
+    f.rr <- grep("\\r\\r$",f.lines)           ## which lines end with \\r\\r
+    f.rr <- f.rr[grep("\\t",f.lines[f.rr+1])] ## make sure that next line starts with \\t
+    if(length(f.rr>0)) {
+        warning(paste0("*** Table name with linebreaks in lines ",paste(f.rr,collapse=", ")," ***"));
+        f.lines[f.rr] <- paste(sub("\\r\\r$","",f.lines[f.rr]),f.lines[f.rr+1],sep="") ## copy up
+        f.lines <- f.lines[-(f.rr+1)]             ## drop lines that we have copied up
+    }
+    f.lines <- sub("\r","",f.lines)
+    ##
+    f.table<-strsplit(f.lines,sep)
+    if(length(f.table[[1]])<3) 
         stop(sprintf("*** cells are not separated by '%s'. Proper z-Tree files use \\t as a separator. Use the \"sep\" option! ***",ifelse(sep=="\t","\\t",sep)))
     splitpoints<-array()
     splitname<-array()
@@ -86,36 +103,36 @@ Your data seem to use a different encoding.
     table(splitname)
     splitcols<-array()
     last<-0
-    for (i in 1:length(aa2)) {
-      if (last==0 || (aa2[[i]][3] != aa2[[i-1]][3])) {
-        last<-last+1
-        splitpoints[last]<-i
-        splitname[last]<-aa2[[i]][3]
-        splittreat[last]<-aa2[[i]][2]
-        splitcols[last]<-length(aa2[[i]])
-      }
-      splitpoints[last+1]<-i+1
+    for (i in 1:length(f.table)) {
+        if (length(f.table[[i]])<3)
+            stop(paste0("*** incomplete entry in line ",i," ***"));
+        ##
+        if (last==0) {## the first line in the file
+            advanceTable();
+        } else if ((f.table[[i]][3] != f.table[[i-1]][3]) || ## name of table has changed
+                       sum(f.table[[i]] != f.table[[ splitpoints[last] ]]) == 0) { ## same name, but new header
+                advanceTable();
+        }
+        splitpoints[last+1]<-i+1
     }
-    # cat(splitpoints)
     result<-list()
     if(is.null(tables))
         tables<-unique(splitname);
     do <- intersect(splitname,tables)
     miss <- setdiff(splitname,tables)
-                                        #if (length(miss)>0)
-    if(!zTree.silent) cat ("Skipping:",miss,"\n")
+    if(!zTree.silent & length(miss>0)) cat ("Skipping:",miss,"\n")
     for (name in do) {
       if(!zTree.silent) cat ("Doing:",name,"\n")
       aTable<-getTables(name)
       if (!is.null(aTable)) result[[name]]<-aTable
     }
     if(!is.null(manipulated.files[[filename]])) { ## add statistics on structure of table in case of manipulation
-        myRange<-range(sapply(aa2,length))
+        myRange<-range(sapply(f.table,length))
         manipulated.files[[filename]] <<- c(manipulated.files[[filename]],sprintf("[%d,%d]",myRange[1],myRange[2]))
     }
     result
   }
-  
+        
   z<-splittable(files[1],tables)
   for (name in files[-1]) {
     if(!zTree.silent) cat (sprintf("*** %s is file %d / %d ***\n",name,which(name==files),length(files)))
@@ -144,9 +161,10 @@ Your data seem to use a different encoding.
         }
         
         ## try to convert characters to numbers if this does not introduce more NAs:
-        for (t in names(z))
+        for (t in names(z)) {
             for(n in names(z[[t]]))
                 if(typeof(z[[t]][[n]])=="character") 
                     if(!is.null(q<-tryCatch(as.numeric(z[[t]][[n]]),warning=function(x) NULL))) z[[t]][[n]]<-q
+        }
   z
 }
